@@ -58,7 +58,6 @@ export const translations: Record<string, Record<string, string>> = {
     speed: "Speed",
     my_courses: "My Courses",
     course_progress: "Course Progress",
-    ai_tutor: "AI Tutor",
     leaderboard: "Leaderboard",
     // Admin dashboard
     please_login_admin: "Please log in with an admin account to view this dashboard.",
@@ -92,7 +91,6 @@ export const translations: Record<string, Record<string, string>> = {
     no: "No",
     term_in_english: "Term in English",
     translation: "Translation",
-    language: "Language",
     open_demo: "Open demo",
     preview: "Preview",
     // Feature descriptions
@@ -240,7 +238,6 @@ export const translations: Record<string, Record<string, string>> = {
     speed: "गति",
     my_courses: "मेरे कोर्स",
     course_progress: "कोर्स प्रगति",
-    ai_tutor: "एआई ट्यूटर",
     leaderboard: "लीडरबोर्ड",
     // Admin dashboard
     please_login_admin: "इस डैशबोर्ड को देखने के लिए कृपया एडमिन खाते से लॉग इन करें।",
@@ -395,7 +392,6 @@ export const translations: Record<string, Record<string, string>> = {
     speed: "வேகம்",
     my_courses: "எனது படிப்புகள்",
     course_progress: "படிப்பு முன்னேற்றம்",
-    ai_tutor: "ஏஐ ஆசிரியர்",
     leaderboard: "முன்னணி பட்டியல்",
     // Admin dashboard
     please_login_admin: "இந்த டாஷ்போர்டைக் காண இருப்பு நிர்வாக கணக்கில் உள்நுழையவும்.",
@@ -517,7 +513,6 @@ export const translations: Record<string, Record<string, string>> = {
     speed: "वेग",
     my_courses: "माझे कोर्स",
     course_progress: "कोर्स प्रगती",
-    ai_tutor: "एआय ट्यूटर",
     leaderboard: "लीडरबोर्ड",
     // Admin dashboard
     please_login_admin: "हा डॅशबोर्ड पाहण्यासाठी कृपया अॅडमिन खात्यात लॉग इन करा.",
