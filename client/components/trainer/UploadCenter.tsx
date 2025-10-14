@@ -64,14 +64,19 @@ const SUPPORTED_TYPES = {
 const LANGUAGES = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
   { code: 'hi', name: 'Hindi', flag: '🇮🇳' },
-  { code: 'es', name: 'Spanish', flag: '🇪🇸' },
-  { code: 'fr', name: 'French', flag: '🇫🇷' },
-  { code: 'de', name: 'German', flag: '🇩🇪' },
-  { code: 'zh', name: 'Chinese', flag: '🇨🇳' },
-  { code: 'ja', name: 'Japanese', flag: '🇯🇵' },
-  { code: 'ko', name: 'Korean', flag: '🇰🇷' },
-  { code: 'ar', name: 'Arabic', flag: '🇸🇦' },
-  { code: 'pt', name: 'Portuguese', flag: '🇵🇹' }
+  { code: 'ta', name: 'Tamil', flag: '🇮🇳' },
+  { code: 'te', name: 'Telugu', flag: '🇮🇳' },
+  { code: 'bn', name: 'Bengali', flag: '🇮🇳' },
+  { code: 'mr', name: 'Marathi', flag: '🇮🇳' },
+  { code: 'gu', name: 'Gujarati', flag: '🇮🇳' },
+  { code: 'kn', name: 'Kannada', flag: '🇮🇳' },
+  { code: 'ml', name: 'Malayalam', flag: '🇮🇳' },
+  { code: 'pa', name: 'Punjabi', flag: '🇮🇳' },
+  { code: 'or', name: 'Odia', flag: '🇮🇳' },
+  { code: 'as', name: 'Assamese', flag: '🇮🇳' },
+  { code: 'ne', name: 'Nepali', flag: '🇮🇳' },
+  { code: 'ur', name: 'Urdu', flag: '🇮🇳' },
+  { code: 'sa', name: 'Sanskrit', flag: '🇮🇳' }
 ];
 
 export default function UploadCenter({ 
@@ -83,7 +88,7 @@ export default function UploadCenter({
 }: UploadCenterProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const [selectedSourceLanguage, setSelectedSourceLanguage] = useState('auto');
-  const [selectedTargetLanguages, setSelectedTargetLanguages] = useState<string[]>(['hi', 'es']);
+  const [selectedTargetLanguages, setSelectedTargetLanguages] = useState<string[]>(['hi', 'ta', 'bn', 'mr']);
   const [localFiles, setLocalFiles] = useState<UploadedFile[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
