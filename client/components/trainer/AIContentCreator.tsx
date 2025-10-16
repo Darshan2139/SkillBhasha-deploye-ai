@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
+import { apiService, ContentGenerationRequest } from '@/lib/api';
 import { 
   Zap, 
   Wand2, 
@@ -194,8 +195,70 @@ export default function AIContentCreator({
     setIsGenerating(true);
     const contentId = `content-${Date.now()}`;
     
-    // Simulate AI content generation
-    setTimeout(() => {
+    try {
+      const request: ContentGenerationRequest = {
+        prompt,
+        language: selectedLanguage,
+        domain: selectedDomain,
+        difficulty: selectedDifficulty,
+        contentType: includeVideo ? 'video' : 'text',
+        includeImages,
+        includeVideo,
+        includeQuiz
+      };
+
+      const response = await apiService.generateContent(request);
+      
+      if (response.success && response.data) {
+        const newContent: GeneratedContent = {
+          id: contentId,
+          title: `Generated ${DOMAINS.find(d => d.code === selectedDomain)?.name} Training Module`,
+          type: includeVideo ? 'video' : 'text',
+          content: response.data.content,
+          language: selectedLanguage,
+          domain: selectedDomain,
+          difficulty: selectedDifficulty,
+          duration: Math.floor(Math.random() * 60) + 15,
+          tags: [selectedDomain, selectedDifficulty, 'ai-generated'],
+          createdAt: new Date().toISOString(),
+          status: 'ready',
+          confidence: Math.floor(Math.random() * 20) + 80,
+          version: 1,
+          isEdited: false
+        };
+
+        setGeneratedContent(prev => [newContent, ...prev]);
+        setSelectedContent(newContent);
+        onContentSelect?.(newContent);
+        onContentGenerated?.(newContent);
+      } else {
+        console.error('Failed to generate content:', response.error);
+        // Fallback to sample content
+        const newContent: GeneratedContent = {
+          id: contentId,
+          title: `Generated ${DOMAINS.find(d => d.code === selectedDomain)?.name} Training Module`,
+          type: includeVideo ? 'video' : 'text',
+          content: generateSampleContent(),
+          language: selectedLanguage,
+          domain: selectedDomain,
+          difficulty: selectedDifficulty,
+          duration: Math.floor(Math.random() * 60) + 15,
+          tags: [selectedDomain, selectedDifficulty, 'ai-generated'],
+          createdAt: new Date().toISOString(),
+          status: 'ready',
+          confidence: Math.floor(Math.random() * 20) + 80,
+          version: 1,
+          isEdited: false
+        };
+
+        setGeneratedContent(prev => [newContent, ...prev]);
+        setSelectedContent(newContent);
+        onContentSelect?.(newContent);
+        onContentGenerated?.(newContent);
+      }
+    } catch (error) {
+      console.error('Error generating content:', error);
+      // Fallback to sample content
       const newContent: GeneratedContent = {
         id: contentId,
         title: `Generated ${DOMAINS.find(d => d.code === selectedDomain)?.name} Training Module`,
@@ -217,8 +280,9 @@ export default function AIContentCreator({
       setSelectedContent(newContent);
       onContentSelect?.(newContent);
       onContentGenerated?.(newContent);
+    } finally {
       setIsGenerating(false);
-    }, 3000 + Math.random() * 2000);
+    }
   };
 
   const generateSampleContent = () => {

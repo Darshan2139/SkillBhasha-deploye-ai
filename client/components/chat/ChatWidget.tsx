@@ -18,6 +18,7 @@ import {
   Sparkles,
   Loader2
 } from "lucide-react";
+import { apiService, ChatMessage } from "@/lib/api";
 
 interface Message {
   id: string;
@@ -75,7 +76,7 @@ export default function ChatWidget() {
     { icon: Lightbulb, label: "Learning tips", action: "tips" }
   ];
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!inputValue.trim()) return;
     
     const userMessage: Message = {
@@ -90,26 +91,53 @@ export default function ChatWidget() {
     setInputValue("");
     setIsTyping(true);
     
-    // Simulate AI response
-    setTimeout(() => {
-      const responses = [
-        `I understand you're asking about "${inputValue}". Let me help you with that!`,
-        `Great question! Here's what I can tell you about "${inputValue}":`,
-        `I'd be happy to help with "${inputValue}". Here's my response:`,
-        `That's an interesting question about "${inputValue}". Let me provide some insights:`
-      ];
+    try {
+      // Convert messages to API format
+      const apiMessages: ChatMessage[] = [...messages, userMessage].map(msg => ({
+        role: msg.role === 'user' ? 'user' : 'assistant',
+        content: msg.content,
+        timestamp: msg.timestamp
+      }));
+
+      const response = await apiService.chat(apiMessages);
       
+      if (response.success && response.data) {
+        const botMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'bot',
+          content: response.data.message.content,
+          timestamp: new Date(),
+          type: 'text'
+        };
+        
+        setMessages(prev => [...prev, botMessage]);
+      } else {
+        // Fallback response
+        const botMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'bot',
+          content: `I understand you're asking about "${inputValue}". Let me help you with that!\n\n[AI service temporarily unavailable. This is a demo response.]`,
+          timestamp: new Date(),
+          type: 'text'
+        };
+        
+        setMessages(prev => [...prev, botMessage]);
+      }
+    } catch (error) {
+      console.error('Error in chat:', error);
+      // Fallback response
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'bot',
-        content: responses[Math.floor(Math.random() * responses.length)] + `\n\n[This is a demo response. In the real implementation, this would be powered by AI with actual translations, summaries, and learning assistance.]`,
+        content: `I understand you're asking about "${inputValue}". Let me help you with that!\n\n[AI service temporarily unavailable. This is a demo response.]`,
         timestamp: new Date(),
         type: 'text'
       };
       
       setMessages(prev => [...prev, botMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1000 + Math.random() * 2000);
+    }
   };
 
   const handleQuickAction = (action: string) => {

@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
+import { generateContent, chat, translate, generateQuiz, summarize } from "./routes/ai";
 
 export function createServer() {
   const app = express();
@@ -18,6 +19,13 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+
+  // AI API routes
+  app.post("/api/ai/generate-content", generateContent);
+  app.post("/api/ai/chat", chat);
+  app.post("/api/ai/translate", translate);
+  app.post("/api/ai/generate-quiz", generateQuiz);
+  app.post("/api/ai/summarize", summarize);
 
   return app;
 }

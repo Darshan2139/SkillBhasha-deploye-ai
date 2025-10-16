@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { apiService, ContentGenerationRequest } from '@/lib/api';
 import { 
   Brain, 
   Sparkles, 
@@ -144,8 +145,51 @@ export default function AIContentCreator({ onContentGenerated, onSave }: AIConte
 
     setIsGenerating(true);
     
-    // Simulate AI generation
-    setTimeout(() => {
+    try {
+      const request: ContentGenerationRequest = {
+        prompt,
+        language: targetLanguage,
+        domain,
+        difficulty: difficulty as 'beginner' | 'intermediate' | 'advanced',
+        contentType: selectedTemplate.category as 'text' | 'video' | 'image' | 'interactive',
+        includeImages: false,
+        includeVideo: selectedTemplate.category === 'video',
+        includeQuiz: selectedTemplate.category === 'interactive'
+      };
+
+      const response = await apiService.generateContent(request);
+      
+      if (response.success && response.data) {
+        const content: GeneratedContent = {
+          id: Date.now().toString(),
+          title: `Generated ${selectedTemplate.name}`,
+          content: response.data.content,
+          language: targetLanguage,
+          type: selectedTemplate.category,
+          timestamp: new Date().toISOString(),
+          status: 'draft'
+        };
+        
+        setGeneratedContent(content);
+        onContentGenerated?.(content);
+      } else {
+        console.error('Failed to generate content:', response.error);
+        // Fallback to demo content
+        const content: GeneratedContent = {
+          id: Date.now().toString(),
+          title: `Generated ${selectedTemplate.name}`,
+          content: `This is AI-generated content for: "${prompt}"\n\nIn ${languages.find(l => l.code === targetLanguage)?.name} language.\n\nDomain: ${domain}\nDifficulty: ${difficulty}\n\n[Generated content would appear here with proper AI translation and localization]`,
+          language: targetLanguage,
+          type: selectedTemplate.category,
+          timestamp: new Date().toISOString(),
+          status: 'draft'
+        };
+        setGeneratedContent(content);
+        onContentGenerated?.(content);
+      }
+    } catch (error) {
+      console.error('Error generating content:', error);
+      // Fallback to demo content
       const content: GeneratedContent = {
         id: Date.now().toString(),
         title: `Generated ${selectedTemplate.name}`,
@@ -155,11 +199,11 @@ export default function AIContentCreator({ onContentGenerated, onSave }: AIConte
         timestamp: new Date().toISOString(),
         status: 'draft'
       };
-      
       setGeneratedContent(content);
-      setIsGenerating(false);
       onContentGenerated?.(content);
-    }, 2000 + Math.random() * 3000);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const handleSave = () => {
