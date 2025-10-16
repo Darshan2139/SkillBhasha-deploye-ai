@@ -60,7 +60,7 @@ class ApiService {
 
   // Generate AI content
   async generateContent(request: ContentGenerationRequest): Promise<ApiResponse<any>> {
-    return this.request('/ai/generate-content', {
+    return this.request('/ai?action=generate-content', {
       method: 'POST',
       body: JSON.stringify(request),
     });
@@ -68,7 +68,7 @@ class ApiService {
 
   // Chat with AI
   async chat(messages: ChatMessage[]): Promise<ApiResponse<{ message: ChatMessage }>> {
-    return this.request('/ai/chat', {
+    return this.request('/ai?action=chat', {
       method: 'POST',
       body: JSON.stringify({ messages }),
     });
@@ -80,7 +80,7 @@ class ApiService {
     targetLanguage: string,
     sourceLanguage: string = 'auto'
   ): Promise<ApiResponse<{ translatedText: string }>> {
-    return this.request('/ai/translate', {
+    return this.request('/ai?action=translate', {
       method: 'POST',
       body: JSON.stringify({ text, targetLanguage, sourceLanguage }),
     });
@@ -92,7 +92,7 @@ class ApiService {
     difficulty: 'beginner' | 'intermediate' | 'advanced' = 'beginner',
     language: string = 'en'
   ): Promise<ApiResponse<{ quiz: string }>> {
-    return this.request('/ai/generate-quiz', {
+    return this.request('/ai?action=generate-quiz', {
       method: 'POST',
       body: JSON.stringify({ content, difficulty, language }),
     });
@@ -104,7 +104,7 @@ class ApiService {
     language: string = 'en',
     maxLength: number = 200
   ): Promise<ApiResponse<{ summary: string }>> {
-    return this.request('/ai/summarize', {
+    return this.request('/ai?action=summarize', {
       method: 'POST',
       body: JSON.stringify({ content, language, maxLength }),
     });
