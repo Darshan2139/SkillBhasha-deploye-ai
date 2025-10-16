@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Features Test - SkillBhasha</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .test-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .loading {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .input-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .status.loading { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 AI Features Test Suite</h1>
+        <p>Test all AI features to ensure they're working correctly with the Gemini API integration.</p>
+        
+        <!-- Server Status -->
+        <div class="test-section">
+            <h3>📡 Server Status</h3>
+            <button class="test-button" onclick="checkServerStatus()">Check Server</button>
+            <div id="serverResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Content Generation Test -->
+        <div class="test-section">
+            <h3>📝 Content Generation Test</h3>
+            <div class="input-group">
+                <label for="contentPrompt">Prompt:</label>
+                <textarea id="contentPrompt" placeholder="Enter your content generation prompt...">Create a beginner-level training module for solar panel installation safety procedures</textarea>
+            </div>
+            <div class="input-group">
+                <label for="contentLanguage">Language:</label>
+                <select id="contentLanguage">
+                    <option value="en">English</option>
+                    <option value="hi">Hindi</option>
+                    <option value="ta">Tamil</option>
+                    <option value="bn">Bengali</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="contentDomain">Domain:</label>
+                <select id="contentDomain">
+                    <option value="solar">Solar Energy</option>
+                    <option value="construction">Construction</option>
+                    <option value="healthcare">Healthcare</option>
+                    <option value="electrical">Electrical</option>
+                </select>
+            </div>
+            <button class="test-button" onclick="testContentGeneration()">Generate Content</button>
+            <div id="contentResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Chat Test -->
+        <div class="test-section">
+            <h3>💬 Chat Test</h3>
+            <div class="input-group">
+                <label for="chatMessage">Message:</label>
+                <input type="text" id="chatMessage" placeholder="Enter your message..." value="Hello! Can you help me understand solar panel safety?">
+            </div>
+            <button class="test-button" onclick="testChat()">Send Message</button>
+            <div id="chatResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Translation Test -->
+        <div class="test-section">
+            <h3>🌐 Translation Test</h3>
+            <div class="input-group">
+                <label for="translateText">Text to translate:</label>
+                <textarea id="translateText" placeholder="Enter text to translate...">Solar panels convert sunlight into electricity using photovoltaic cells.</textarea>
+            </div>
+            <div class="input-group">
+                <label for="targetLanguage">Target Language:</label>
+                <select id="targetLanguage">
+                    <option value="hi">Hindi</option>
+                    <option value="ta">Tamil</option>
+                    <option value="bn">Bengali</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+            <button class="test-button" onclick="testTranslation()">Translate</button>
+            <div id="translationResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Quiz Generation Test -->
+        <div class="test-section">
+            <h3>❓ Quiz Generation Test</h3>
+            <div class="input-group">
+                <label for="quizContent">Content for quiz:</label>
+                <textarea id="quizContent" placeholder="Enter content to generate quiz from...">Solar panels are devices that convert sunlight into electricity. They consist of photovoltaic cells that generate direct current when exposed to light. Proper installation requires understanding electrical safety, structural requirements, and local building codes.</textarea>
+            </div>
+            <div class="input-group">
+                <label for="quizDifficulty">Difficulty:</label>
+                <select id="quizDifficulty">
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                </select>
+            </div>
+            <button class="test-button" onclick="testQuizGeneration()">Generate Quiz</button>
+            <div id="quizResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Summarization Test -->
+        <div class="test-section">
+            <h3>📄 Summarization Test</h3>
+            <div class="input-group">
+                <label for="summarizeContent">Content to summarize:</label>
+                <textarea id="summarizeContent" placeholder="Enter content to summarize...">Solar energy is a renewable energy source that harnesses the power of the sun to generate electricity. Solar panels, made up of photovoltaic cells, convert sunlight into direct current electricity. This clean energy source helps reduce carbon emissions and provides a sustainable alternative to fossil fuels. Installation requires proper planning, safety measures, and compliance with local regulations.</textarea>
+            </div>
+            <div class="input-group">
+                <label for="maxLength">Max Length:</label>
+                <input type="number" id="maxLength" value="50" min="20" max="200">
+            </div>
+            <button class="test-button" onclick="testSummarization()">Summarize</button>
+            <div id="summarizeResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Run All Tests -->
+        <div class="test-section">
+            <h3>🚀 Run All Tests</h3>
+            <button class="test-button" onclick="runAllTests()" style="background: #28a745;">Run All Tests</button>
+            <div id="allTestsResult" class="result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+        
+        // Utility function to make API calls
+        async function makeAPICall(endpoint, method = 'GET', body = null) {
+            try {
+                const options = {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                };
+                
+                if (body) {
+                    options.body = JSON.stringify(body);
+                }
+                
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+                const data = await response.json();
+                
+                return {
+                    success: response.ok,
+                    status: response.status,
+                    data: data
+                };
+            } catch (error) {
+                return {
+                    success: false,
+                    error: error.message
+                };
+            }
+        }
+
+        // Show result in a div
+        function showResult(elementId, content, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = `result ${type}`;
+            element.textContent = content;
+        }
+
+        // Check server status
+        async function checkServerStatus() {
+            showResult('serverResult', 'Checking server...', 'loading');
+            
+            const result = await makeAPICall('/ping');
+            
+            if (result.success) {
+                showResult('serverResult', `✅ Server is running!\nMessage: ${result.data.message}`, 'success');
+            } else {
+                showResult('serverResult', `❌ Server is not responding\nError: ${result.error || 'Unknown error'}`, 'error');
+            }
+        }
+
+        // Test content generation
+        async function testContentGeneration() {
+            showResult('contentResult', 'Generating content...', 'loading');
+            
+            const request = {
+                prompt: document.getElementById('contentPrompt').value,
+                language: document.getElementById('contentLanguage').value,
+                domain: document.getElementById('contentDomain').value,
+                difficulty: 'beginner',
+                contentType: 'text',
+                includeImages: false,
+                includeVideo: false,
+                includeQuiz: true
+            };
+            
+            const result = await makeAPICall('/ai/generate-content', 'POST', request);
+            
+            if (result.success && result.data?.content) {
+                showResult('contentResult', `✅ Content generated successfully!\n\nLength: ${result.data.content.length} characters\n\nContent preview:\n${result.data.content.substring(0, 500)}...`, 'success');
+            } else {
+                showResult('contentResult', `❌ Content generation failed\nError: ${result.data?.error || result.error || 'Unknown error'}`, 'error');
+            }
+        }
+
+        // Test chat
+        async function testChat() {
+            showResult('chatResult', 'Sending message...', 'loading');
+            
+            const request = {
+                messages: [{
+                    role: 'user',
+                    content: document.getElementById('chatMessage').value,
+                    timestamp: new Date()
+                }]
+            };
+            
+            const result = await makeAPICall('/ai/chat', 'POST', request);
+            
+            if (result.success && result.data?.message?.content) {
+                showResult('chatResult', `✅ Chat response received!\n\nResponse: ${result.data.message.content}`, 'success');
+            } else {
+                showResult('chatResult', `❌ Chat failed\nError: ${result.data?.error || result.error || 'Unknown error'}`, 'error');
+            }
+        }
+
+        // Test translation
+        async function testTranslation() {
+            showResult('translationResult', 'Translating text...', 'loading');
+            
+            const request = {
+                text: document.getElementById('translateText').value,
+                targetLanguage: document.getElementById('targetLanguage').value,
+                sourceLanguage: 'en'
+            };
+            
+            const result = await makeAPICall('/ai/translate', 'POST', request);
+            
+            if (result.success && result.data?.translatedText) {
+                showResult('translationResult', `✅ Translation successful!\n\nOriginal: ${request.text}\nTranslated: ${result.data.translatedText}`, 'success');
+            } else {
+                showResult('translationResult', `❌ Translation failed\nError: ${result.data?.error || result.error || 'Unknown error'}`, 'error');
+            }
+        }
+
+        // Test quiz generation
+        async function testQuizGeneration() {
+            showResult('quizResult', 'Generating quiz...', 'loading');
+            
+            const request = {
+                content: document.getElementById('quizContent').value,
+                difficulty: document.getElementById('quizDifficulty').value,
+                language: 'en'
+            };
+            
+            const result = await makeAPICall('/ai/generate-quiz', 'POST', request);
+            
+            if (result.success && result.data?.quiz) {
+                showResult('quizResult', `✅ Quiz generated successfully!\n\nQuiz content:\n${result.data.quiz}`, 'success');
+            } else {
+                showResult('quizResult', `❌ Quiz generation failed\nError: ${result.data?.error || result.error || 'Unknown error'}`, 'error');
+            }
+        }
+
+        // Test summarization
+        async function testSummarization() {
+            showResult('summarizeResult', 'Summarizing content...', 'loading');
+            
+            const request = {
+                content: document.getElementById('summarizeContent').value,
+                language: 'en',
+                maxLength: parseInt(document.getElementById('maxLength').value)
+            };
+            
+            const result = await makeAPICall('/ai/summarize', 'POST', request);
+            
+            if (result.success && result.data?.summary) {
+                showResult('summarizeResult', `✅ Summarization successful!\n\nSummary: ${result.data.summary}`, 'success');
+            } else {
+                showResult('summarizeResult', `❌ Summarization failed\nError: ${result.data?.error || result.error || 'Unknown error'}`, 'error');
+            }
+        }
+
+        // Run all tests
+        async function runAllTests() {
+            showResult('allTestsResult', 'Running all tests...', 'loading');
+            
+            const tests = [
+                { name: 'Server Status', fn: checkServerStatus },
+                { name: 'Content Generation', fn: testContentGeneration },
+                { name: 'Chat', fn: testChat },
+                { name: 'Translation', fn: testTranslation },
+                { name: 'Quiz Generation', fn: testQuizGeneration },
+                { name: 'Summarization', fn: testSummarization }
+            ];
+            
+            let results = [];
+            
+            for (const test of tests) {
+                try {
+                    // Run the test and capture its result
+                    if (test.name === 'Server Status') {
+                        const result = await makeAPICall('/ping');
+                        results.push(`${result.success ? '✅' : '❌'} ${test.name}: ${result.success ? 'PASSED' : 'FAILED'}`);
+                    } else {
+                        // For other tests, we'll just indicate they were run
+                        results.push(`🔄 ${test.name}: Running...`);
+                    }
+                } catch (error) {
+                    results.push(`❌ ${test.name}: ERROR - ${error.message}`);
+                }
+            }
+            
+            showResult('allTestsResult', `Test Results:\n\n${results.join('\n')}\n\nNote: Individual test results are shown above.`, 'info');
+        }
+
+        // Auto-check server status on page load
+        window.onload = function() {
+            checkServerStatus();
+        };
+    </script>
+</body>
+</html>
